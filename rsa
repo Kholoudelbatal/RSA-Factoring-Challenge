@@ -1,32 +1,29 @@
 #!/usr/bin/python3
-# library to get arguments
 import sys
+from sympy import factorint
 
-
-# fn unpack number factorial
-def fc():
+def factorize_numbers(filename):
     """
-    function fc to search file to convert number and format n=p*q
+    Function to factorize numbers from a file using sympy library
     """
     try:
-        revfile = sys.argv[1]
-        with open(revfile) as f:
-            for revnumber in f:
-                revnumber = int(revnumber)
-                if revnumber % 2 == 0:
-                        print("{}={}*{}".format(revnumber, revnumber // 2, 2))
-                        continue
-                i = 3
-                while i < revnumber // 2:
-                    if revnumber % i == 0:
-                        print("{}={}*{}".format(revnumber, revnumber // i, i))
-                        break
-                    i = i + 2
-                if i == (revnumber // 2) + 1:
-                    print("{}={}*{}".format(revnumber, revnumber, 1))
-    except (IndexError):
-        pass
+        with open(filename) as f:
+            for number in f:
+                number = int(number.strip())
+                factors = factorint(number)
+                p, q = factors.keys()  # Assuming there are only two prime factors
+                print(f"{number} = {p} * {q}")
+    except FileNotFoundError:
+        print("File not found.")
+    except ValueError:
+        print("Invalid input in the file.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python script.py filename")
+    else:
+        filename = sys.argv[1]
+        factorize_numbers(filename)
 
-# autostart
-fc()
